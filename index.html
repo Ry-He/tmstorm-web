@@ -2,17 +2,133 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>TMSTORM.XYZ | Torpid Mind Storm</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TMSTORM | The Workshop</title>
+    <link href="https://fonts.googleapis.com/css2?family=Michroma&family=Montserrat:wght@300;700&display=swap" rel="stylesheet">
     <style>
-        body { background: #1a1a1a; color: #eee; font-family: 'Montserrat', sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-        img { width: 300px; filter: drop-shadow(0 0 20px #00d4ff); }
-        h1 { letter-spacing: 5px; color: #00d4ff; margin-top: 20px; }
-        p { opacity: 0.6; font-style: italic; }
+        :root {
+            --bg-color: #0d0d0d;
+            --card-bg: #1a1a1a;
+            --accent-blue: #00d4ff;
+            --accent-green: #39ff14;
+            --text-main: #e0e0e0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1, h2 { font-family: 'Michroma', sans-serif; text-transform: uppercase; letter-spacing: 2px; }
+
+        /* The Bento Grid Layout */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-auto-rows: minmax(150px, auto);
+            gap: 20px;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid #333;
+            border-radius: 15px;
+            padding: 20px;
+            position: relative;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
+        }
+
+        /* Hero Tile: The Stream */
+        .hero { grid-column: span 3; grid-row: span 2; display: flex; flex-direction: column; }
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; margin-top: 10px; border-radius: 8px; overflow: hidden; background: #000; }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+
+        /* Sidebar Tiles */
+        .sidebar { grid-column: span 1; grid-row: span 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+        .sidebar i { font-size: 2rem; color: var(--accent-blue); margin-bottom: 10px; }
+
+        /* Status Bar Tile */
+        .status { grid-column: span 1; grid-row: span 1; border-left: 4px solid var(--accent-green); }
+
+        /* Bottom Feature Tiles */
+        .feature { grid-column: span 2; }
+
+        a { color: var(--accent-blue); text-decoration: none; font-weight: bold; }
+        .tag { font-size: 0.7rem; background: #333; padding: 3px 8px; border-radius: 4px; color: var(--accent-blue); position: absolute; top: 15px; right: 15px; }
+
+        @media (max-width: 900px) {
+            .bento-grid { grid-template-columns: repeat(2, 1fr); }
+            .hero { grid-column: span 2; }
+        }
+
+        @media (max-width: 600px) {
+            .bento-grid { grid-template-columns: 1fr; }
+            .hero, .feature, .sidebar, .status { grid-column: span 1; }
+        }
     </style>
 </head>
 <body>
-    <img src="TMS_Logo_Master.png" alt="Torpid Mind Storm Logo">
-    <h1>COMING SOON</h1>
-    <p>"Building a digital legacy, one lightning bolt at a time."</p>
+
+    <header style="text-align: center; margin-bottom: 40px;">
+        <img src="TMS_Logo_Master.png" alt="TMSTORM Logo" style="width: 120px; filter: drop-shadow(0 0 10px var(--accent-blue));">
+        <h1>TMSTORM</h1>
+        <p style="opacity: 0.6;">Whenever the storm rolls in.</p>
+    </header>
+
+    <main class="bento-grid">
+        <div class="card hero">
+            <span class="tag">LIVE FEED</span>
+            <h2>Current Transmission</h2>
+            <div class="video-container">
+                <iframe src="https://www.youtube.com/embed/live_stream?channel=UC9R-7_9KUdF214iWGD59_yg" allowfullscreen></iframe>
+            </div>
+        </div>
+
+        <div class="card status">
+            <h2>Status</h2>
+            <p><strong>Project:</strong> Building the Landing Page</p>
+            <p><strong>Mood:</strong> Absurd</p>
+        </div>
+
+        <div class="card sidebar">
+            <h2>The Engineer</h2>
+            <p>M&S by day, Chaos by night.</p>
+            <a href="about.html">Read the Manifesto →</a>
+        </div>
+
+        <div class="card feature">
+            <span class="tag">GAMING</span>
+            <h2>Survival Logs</h2>
+            <p>Unoptimized gameplay, surprising challenges, and zero meta-gaming.</p>
+            <a href="gaming.html">Enter the Simulation →</a>
+        </div>
+
+        <div class="card feature">
+            <span class="tag">MUSIC</span>
+            <h2>The Rack</h2>
+            <p>FL Studio experiments, technical rants, and sound production.</p>
+            <a href="music.html">Hear the Chaos →</a>
+        </div>
+    </main>
+
+    <footer style="margin-top: 50px; opacity: 0.4; font-size: 0.8rem;">
+        v1.0.0 | No Politics. Just Science. | tmstorm.xyz
+    </footer>
+
 </body>
 </html>
