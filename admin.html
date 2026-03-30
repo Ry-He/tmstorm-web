@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TMS | STATUS_UPDATE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Michroma&family=Montserrat:wght@300;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0d0d0d;
+            --card-bg: rgba(26, 26, 26, 0.95);
+            --accent-blue: #00d4ff;
+            --accent-green: #39ff14;
+            --accent-red: #ff4444;
+            --text-main: #e0e0e0;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: url('circuitry_bg.jpg');
+            background-attachment: fixed;
+            background-size: cover;
+            background-position: center;
+            color: var(--text-main);
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            z-index: -1;
+        }
+
+        h1, h2, h3 { font-family: 'Michroma', sans-serif; text-transform: uppercase; letter-spacing: 2px; }
+
+        .terminal {
+            background: var(--card-bg);
+            border: 1px solid #333;
+            border-left: 4px solid var(--accent-green);
+            border-radius: 15px;
+            padding: 40px;
+            width: 100%;
+            max-width: 500px;
+            backdrop-filter: blur(5px);
+        }
+
+        .terminal h2 {
+            margin-top: 0;
+            color: var(--accent-green);
+            font-size: 1rem;
+        }
+
+        .prompt {
+            font-family: 'Michroma', sans-serif;
+            font-size: 0.7rem;
+            color: var(--accent-blue);
+            margin-bottom: 4px;
+            letter-spacing: 1px;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            background: #111;
+            border: 1px solid #444;
+            border-radius: 6px;
+            color: var(--text-main);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            padding: 10px 12px;
+            margin-bottom: 20px;
+            transition: border-color 0.2s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 8px rgba(0, 212, 255, 0.2);
+        }
+
+        .divider {
+            border: none;
+            border-top: 1px solid #333;
+            margin: 24px 0;
+        }
+
+        button {
+            width: 100%;
+            background: transparent;
+            border: 1px solid var(--accent-green);
+            border-radius: 6px;
+            color: var(--accent-green);
+            font-family: 'Michroma', sans-serif;
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            padding: 12px;
+            cursor: pointer;
+            transition: background 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        button:hover:not(:disabled) {
+            background: rgba(57, 255, 20, 0.08);
+            box-shadow: 0 0 12px rgba(57, 255, 20, 0.2);
+        }
+
+        button:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        #status-msg {
+            margin-top: 16px;
+            font-size: 0.8rem;
+            text-align: center;
+            min-height: 1.2em;
+            letter-spacing: 1px;
+        }
+
+        #status-msg.success { color: var(--accent-green); }
+        #status-msg.error { color: var(--accent-red); }
+        #status-msg.working { color: var(--accent-blue); }
+
+        .token-note {
+            font-size: 0.7rem;
+            opacity: 0.4;
+            margin-top: -14px;
+            margin-bottom: 20px;
+        }
+
+        a {
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-size: 0.8rem;
+        }
+
+        .back-link {
+            margin-top: 24px;
+            opacity: 0.5;
+            font-size: 0.75rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="terminal">
+        <h2>// STATUS_UPDATE.EXE</h2>
+
+        <div class="prompt">GITHUB_TOKEN</div>
+        <input type="password" id="token" placeholder="ghp_xxxxxxxxxxxx" autocomplete="off">
+        <p class="token-note">Never stored. Only used for this request.</p>
+
+        <hr class="divider">
+
+        <div class="prompt">PROJECT</div>
+        <input type="text" id="project" placeholder="e.g. Chess Set Casting" maxlength="60">
+
+        <div class="prompt">FORECAST</div>
+        <input type="text" id="forecast" placeholder="e.g. Stormy" maxlength="60">
+
+        <button id="submit-btn" onclick="pushStatus()">TRANSMIT →</button>
+
+        <div id="status-msg"></div>
+    </div>
+
+    <div class="back-link">
+        <a href="index.html">← Back to the Workshop</a>
+    </div>
+
+    <script>
+        const REPO = 'Ry-He/tmstorm-web';
+        const FILE_PATH = 'status.json';
+        const BRANCH = 'main';
+        const API_BASE = `https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`;
+
+        function setMsg(text, type) {
+            const el = document.getElementById('status-msg');
+            el.textContent = text;
+            el.className = type;
+        }
+
+        async function pushStatus() {
+            const token = document.getElementById('token').value.trim();
+            const project = document.getElementById('project').value.trim();
+            const forecast = document.getElementById('forecast').value.trim();
+            const btn = document.getElementById('submit-btn');
+
+            if (!token) return setMsg('TOKEN REQUIRED.', 'error');
+            if (!project || !forecast) return setMsg('ALL FIELDS REQUIRED.', 'error');
+
+            btn.disabled = true;
+            setMsg('CONTACTING GITHUB...', 'working');
+
+            try {
+                // Step 1: Get current file SHA (required by GitHub API to update a file)
+                const getRes = await fetch(`${API_BASE}?ref=${BRANCH}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Accept': 'application/vnd.github+json'
+                    }
+                });
+
+                if (!getRes.ok) {
+                    const err = await getRes.json();
+                    throw new Error(err.message || 'Failed to fetch file SHA');
+                }
+
+                const fileData = await getRes.json();
+                const sha = fileData.sha;
+
+                // Step 2: Build updated content
+                const newContent = JSON.stringify({ project, forecast }, null, 2);
+                const encoded = btoa(unescape(encodeURIComponent(newContent)));
+
+                // Step 3: Commit the update
+                setMsg('TRANSMITTING...', 'working');
+
+                const putRes = await fetch(API_BASE, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Accept': 'application/vnd.github+json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: `status: update to "${project}" / "${forecast}"`,
+                        content: encoded,
+                        sha: sha,
+                        branch: BRANCH
+                    })
+                });
+
+                if (!putRes.ok) {
+                    const err = await putRes.json();
+                    throw new Error(err.message || 'Commit failed');
+                }
+
+                setMsg('TRANSMISSION COMPLETE. Site updates in ~60s.', 'success');
+                document.getElementById('project').value = '';
+                document.getElementById('forecast').value = '';
+
+            } catch (err) {
+                setMsg(`ERROR: ${err.message}`, 'error');
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        // Allow Enter key to submit
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Enter') pushStatus();
+        });
+    </script>
+
+</body>
+</html>
