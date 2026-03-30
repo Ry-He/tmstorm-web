@@ -1,1 +1,149 @@
-<h1>SYSTEM OFFLINE: RECOVERY IN PROGRESS</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TMSTORM | Accessing_GamingLogs.EXE...</title>
+    <link href="https://fonts.googleapis.com/css2?family=Michroma&family=Montserrat:wght@300;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0d0d0d;
+            --accent-blue: #00d4ff;
+            --accent-red: #ff0000; /* For chromatic aberration */
+            --text-main: #e0e0e0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: url('circuitry_bg.jpg');
+            background-attachment: fixed;
+            background-size: cover;
+            color: var(--text-main);
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden; /* Keeps the glitched text from breaking the page flow */
+        }
+
+        /* Dark overlay for readability */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85); /* Slightly darker for better glitch contrast */
+            z-index: -1;
+        }
+
+        /* ----------------------------------------------------------- */
+        /* THE GLITCH ENGINE */
+        /* ----------------------------------------------------------- */
+
+        .glitch-wrapper {
+            text-align: center;
+            position: relative;
+        }
+
+        .glitch-text {
+            font-family: 'Michroma', sans-serif;
+            font-size: 5rem; /* VERY Prominent */
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            position: relative;
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            cursor: pointer;
+            
+            /* Apply the main animations */
+            animation: glitch 2s infinite, shimmer 5s infinite;
+        }
+
+        /* Creating the Chromatic 'Ghosts' (Red and Blue) */
+        .glitch-text::before,
+        .glitch-text::after {
+            content: attr(data-text); /* Pulls the content from the HTML attribute */
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .glitch-text::before {
+            color: var(--accent-red);
+            left: 2px;
+            text-shadow: -2px 0 var(--accent-red);
+            clip: rect(44px, 450px, 56px, 0); /* Masks off part of the text */
+            animation: glitch 1.5s infinite linear alternate-reverse, displacement 3s infinite;
+        }
+
+        .glitch-text::after {
+            color: var(--accent-blue);
+            left: -2px;
+            text-shadow: 2px 0 var(--accent-blue);
+            clip: rect(100px, 450px, 120px, 0);
+            animation: glitch 1s infinite linear alternate-reverse, displacement 2s infinite alternate;
+        }
+
+        /* THE ANIMATIONS */
+
+        /* 1. Main 'Teak/Flicker' Glitch */
+        @keyframes glitch {
+            0% { text-shadow: 0.5px 0 0 var(--accent-red), -0.5px 0 0 var(--accent-blue); }
+            100% { text-shadow: -0.5px 0 0 var(--accent-red), 0.5px 0 0 var(--accent-blue); }
+        }
+
+        /* 2. Rapid Horizontal Displacement (The Tearing) */
+        @keyframes displacement {
+            2%, 64% { transform: translate(2px,0) skew(0deg); }
+            4%, 60% { transform: translate(-2px,0) skew(0deg); }
+            62% { transform: translate(0,0) skew(5deg); }
+        }
+
+        /* 3. The Static Shimmer (The Pulse) */
+        @keyframes shimmer {
+            0%, 100% { opacity: 1; filter: contrast(100%) brightness(100%); }
+            50% { opacity: 0.95; filter: contrast(120%) brightness(110%); }
+            51% { opacity: 1; filter: contrast(100%) brightness(100%); } /* A split-second flash */
+        }
+
+        /* The Subtitle (Less annoying) */
+        .status-log {
+            font-family: 'Courier New', Courier, monospace;
+            color: var(--accent-blue);
+            font-size: 1rem;
+            margin-top: 10px;
+            opacity: 0.6;
+        }
+
+        /* Back Button - Same style as About Me */
+        .back-btn {
+            margin-top: 40px;
+            display: inline-block;
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-family: 'Michroma', sans-serif;
+            font-size: 0.8rem;
+            border: 1px solid var(--accent-blue);
+            padding: 10px 20px;
+            transition: all 0.3s;
+        }
+        .back-btn:hover { background: var(--accent-blue); color: #000; }
+
+    </style>
+</head>
+<body>
+
+    <div class="glitch-wrapper">
+        <h1 class="glitch-text" data-text="GAMINGLogs.EXE">GAMINGLogs.EXE</h1>
+        <p class="status-log">RECOVERY_PROTOCOL_ACTIVE (Placeholder v1.1) ...</p>
+        
+        <a href="index.html" class="back-btn">RETURN TO WORKSHOP</a>
+    </div>
+
+</body>
+</html>
