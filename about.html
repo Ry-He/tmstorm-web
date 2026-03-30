@@ -1,68 +1,152 @@
-<style>
-    .log-container {
-        background: #0d0d0d;
-        border: 1px solid #333;
-        padding: 30px;
-        font-family: 'Courier New', Courier, monospace;
-        line-height: 1.6;
-        max-width: 800px;
-        margin: 40px auto;
-        box-shadow: inset 0 0 10px #000;
-    }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TMSTORM | Accessing Operator_Logs...</title>
+    <link href="https://fonts.googleapis.com/css2?family=Michroma&family=Montserrat:wght@300;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0d0d0d;
+            --card-bg: #1a1a1a;
+            --accent-blue: #00d4ff;
+            --text-main: #e0e0e0;
+        }
 
-    .log-header {
-        border-bottom: 2px solid var(--accent-blue);
-        margin-bottom: 20px;
-        padding-bottom: 10px;
-        color: var(--accent-blue);
-    }
+        body {
+            background-color: var(--bg-color);
+            background-image: url('circuitry_bg.jpg');
+            background-attachment: fixed;
+            background-size: cover;
+            color: var(--text-main);
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
 
-    .timestamp { color: #555; font-size: 0.8rem; }
-    
-    .status-badge {
-        background: var(--accent-blue);
-        color: #000;
-        padding: 2px 8px;
-        font-weight: bold;
-        text-transform: uppercase;
-    }
+        /* Dark overlay for readability */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: -1;
+        }
 
-    .log-body h2 { color: var(--accent-blue); font-size: 1.2rem; margin-top: 30px; }
-    
-    .cursor {
-        display: inline-block;
-        width: 10px;
-        height: 1.2rem;
-        background: var(--accent-blue);
-        animation: blink 1s infinite;
-        vertical-align: middle;
-    }
+        .log-container {
+            background: rgba(26, 26, 26, 0.95);
+            border: 1px solid #333;
+            padding: 40px;
+            font-family: 'Courier New', Courier, monospace;
+            line-height: 1.6;
+            max-width: 800px;
+            width: 90%;
+            margin: 40px auto;
+            border-radius: 8px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+        }
 
-    @keyframes blink { 50% { opacity: 0; } }
-</style>
+        .log-header {
+            border-bottom: 2px solid var(--accent-blue);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+        }
 
-<div class="log-container">
-    <div class="log-header">
-        <span class="timestamp">[SYSTEM LOG: 2026.03.29_17:40]</span>
-        <h1>> ABOUT_OPERATOR.EXE</h1>
-    </div>
+        .log-header h1 {
+            font-family: 'Michroma', sans-serif;
+            color: var(--accent-blue);
+            font-size: 1.5rem;
+            margin: 10px 0;
+        }
 
-    <div class="log-body">
-        <p><span class="status-badge">IDENTIFIED</span> <strong>TMSTORM</strong></p>
+        .timestamp { color: #666; font-size: 0.8rem; }
         
-        <h2>01_BACKGROUND</h2>
-        <p>Daylight hours are spent as a Modeling & Simulation Engineer. I build worlds and test systems for a living. When the sun goes down, the workshop opens. I’m not a professional gamer; I’m a "decent" one. I pick up tools, I learn the mechanics, and I see how long I can survive before the chaos takes over.</p>
+        .status-badge {
+            background: var(--accent-blue);
+            color: #000;
+            padding: 2px 8px;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
 
-        <h2>02_PHILOSOPHY</h2>
-        <p>The "Torpid Mind Storm" is about the intersection of technical curiosity and absurd fun. No exploits. No meta. Just an engineer in a cluttered workshop seeing what happens when you push the red button.</p>
+        .log-body h2 { 
+            color: var(--accent-blue); 
+            font-family: 'Michroma', sans-serif;
+            font-size: 1rem; 
+            margin-top: 30px; 
+            border-left: 3px solid var(--accent-blue);
+            padding-left: 10px;
+        }
 
-        <h2>03_THE_STACK</h2>
-        <ul>
-            <li><strong>Graphics:</strong> RTX 4070 (The Workhorse)</li>
-            <li><strong>Audio:</strong> FL Studio + FiFine K688</li>
-            <li><strong>Engine:</strong> Open Source (OBS, GIMP, GitHub)</li>
-        </ul>
+        .log-body p, .log-body li {
+            font-size: 1rem;
+            color: #ccc;
+        }
 
-        <p>Recording live... <span class="cursor"></span></p>
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 1.2rem;
+            background: var(--accent-blue);
+            animation: blink 1s infinite;
+            vertical-align: middle;
+        }
+
+        .back-btn {
+            margin-top: 30px;
+            display: inline-block;
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-family: 'Michroma', sans-serif;
+            font-size: 0.8rem;
+            border: 1px solid var(--accent-blue);
+            padding: 10px 20px;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: var(--accent-blue);
+            color: #000;
+        }
+
+        @keyframes blink { 50% { opacity: 0; } }
+    </style>
+</head>
+<body>
+
+    <div class="log-container">
+        <div class="log-header">
+            <span class="timestamp">[INTERNAL_LOG::STORM_OPERATOR_v1.0]</span>
+            <h1>> ACCESSING_BIO.EXE</h1>
+        </div>
+
+        <div class="log-body">
+            <p><span class="status-badge">AUTHORIZED</span> <strong>SUBJECT: TMSTORM</strong></p>
+            
+            <h2>01_BACKGROUND</h2>
+            <p>Daylight cycles are dedicated to Modeling & Simulation Engineering—building complex systems and testing digital worlds. When the sun goes down, the workshop activates. I am a "decent" gamer: capable of holding the line, but uninterested in the soul-crushing grind of the "meta."</p>
+
+            <h2>02_THE_MISSION</h2>
+            <p>The "Torpid Mind Storm" is a high-fidelity archive of technical curiosity and absurd fun. No exploits. No corporate polish. Just an engineer in a cluttered workshop seeing what happens when you push the system to its limits.</p>
+
+            <h2>03_HARDWARE_MANIFEST</h2>
+            <ul style="list-style-type: none; padding-left: 0;">
+                <li>[+] <strong>PROCESSING:</strong> NVIDIA RTX 4070</li>
+                <li>[+] <strong>AUDIO_INPUT:</strong> FiFine K688 Dynamic</li>
+                <li>[+] <strong>WORKBENCH:</strong> FL Studio / GIMP / OBS</li>
+            </ul>
+
+            <p style="margin-top: 40px;">End of file. Recording active... <span class="cursor"></span></p>
+            
+            <a href="index.html" class="back-btn">RETURN TO DASHBOARD</a>
+        </div>
     </div>
-</div>
+
+</body>
+</html>
