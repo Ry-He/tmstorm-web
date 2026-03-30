@@ -9,7 +9,7 @@
     <style>
         :root {
             --bg-color: #0d0d0d;
-            --card-bg: rgba(26, 26, 26, 0.9); /* Made slightly transparent to show the circuit grain */
+            --card-bg: rgba(26, 26, 26, 0.9);
             --accent-blue: #00d4ff;
             --accent-green: #39ff14;
             --text-main: #e0e0e0;
@@ -17,12 +17,10 @@
 
         body {
             background-color: var(--bg-color);
-            /* THE NEW BACKGROUND SETTINGS */
             background-image: url('circuitry_bg.jpg');
-            background-attachment: fixed; /* Parallax effect */
+            background-attachment: fixed;
             background-size: cover;
             background-position: center;
-            
             color: var(--text-main);
             font-family: 'Montserrat', sans-serif;
             margin: 0;
@@ -32,12 +30,11 @@
             align-items: center;
         }
 
-        /* Adding an overlay to ensure the background doesn't distract from the text */
         body::before {
             content: "";
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.6); /* Adjust this 0.6 to make background darker/lighter */
+            background: rgba(0, 0, 0, 0.6);
             z-index: -1;
         }
 
@@ -60,7 +57,7 @@
             position: relative;
             transition: transform 0.3s ease, border-color 0.3s ease;
             overflow: hidden;
-            backdrop-filter: blur(5px); /* Blurs the circuitry behind the cards for readability */
+            backdrop-filter: blur(5px);
         }
 
         .card:hover {
@@ -80,7 +77,14 @@
         a { color: var(--accent-blue); text-decoration: none; font-weight: bold; }
         .tag { font-size: 0.7rem; background: #333; padding: 3px 8px; border-radius: 4px; color: var(--accent-blue); position: absolute; top: 15px; right: 15px; }
 
-        /* Responsive Tweaks */
+        /* Status loading state */
+        .status-value {
+            transition: opacity 0.3s ease;
+        }
+        .status-value.loading {
+            opacity: 0.3;
+        }
+
         @media (max-width: 900px) {
             .bento-grid { grid-template-columns: repeat(2, 1fr); }
             .hero { grid-column: span 2; }
@@ -111,8 +115,8 @@
 
         <div class="card status">
             <h2>Status</h2>
-            <p><strong>Project:</strong> Getting Situated</p>
-            <p><strong>Forecast:</strong> Calm</p>
+            <p><strong>Project:</strong> <span id="status-project" class="status-value loading">...</span></p>
+            <p><strong>Forecast:</strong> <span id="status-forecast" class="status-value loading">...</span></p>
         </div>
 
         <div class="card sidebar">
@@ -146,6 +150,38 @@
     <footer style="margin-top: 50px; opacity: 0.4; font-size: 0.8rem;">
         v1.0.0 | Static may occur. | tmstorm.xyz
     </footer>
+
+    <script>
+        // Fetch status from GitHub raw content
+        // Cache busting via timestamp so GitHub's CDN doesn't serve stale data
+        const STATUS_URL = 'https://raw.githubusercontent.com/Ry-He/tmstorm-web/main/status.json';
+
+        async function loadStatus() {
+            try {
+                const res = await fetch(`${STATUS_URL}?t=${Date.now()}`);
+                if (!res.ok) throw new Error('Failed to fetch status');
+                const data = await res.json();
+
+                const projectEl = document.getElementById('status-project');
+                const forecastEl = document.getElementById('status-forecast');
+
+                projectEl.textContent = data.project || '—';
+                forecastEl.textContent = data.forecast || '—';
+
+                projectEl.classList.remove('loading');
+                forecastEl.classList.remove('loading');
+            } catch (err) {
+                // Fail silently but visibly — show dashes rather than broken state
+                document.getElementById('status-project').textContent = '—';
+                document.getElementById('status-forecast').textContent = '—';
+                document.getElementById('status-project').classList.remove('loading');
+                document.getElementById('status-forecast').classList.remove('loading');
+                console.warn('Status fetch failed:', err);
+            }
+        }
+
+        loadStatus();
+    </script>
 
 </body>
 </html>
