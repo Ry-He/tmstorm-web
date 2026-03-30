@@ -9,7 +9,7 @@
     <style>
         :root {
             --bg-color: #0d0d0d;
-            --card-bg: #1a1a1a;
+            --card-bg: rgba(26, 26, 26, 0.9); /* Made slightly transparent to show the circuit grain */
             --accent-blue: #00d4ff;
             --accent-green: #39ff14;
             --text-main: #e0e0e0;
@@ -17,6 +17,12 @@
 
         body {
             background-color: var(--bg-color);
+            /* THE NEW BACKGROUND SETTINGS */
+            background-image: url('circuitry_bg.jpg');
+            background-attachment: fixed; /* Parallax effect */
+            background-size: cover;
+            background-position: center;
+            
             color: var(--text-main);
             font-family: 'Montserrat', sans-serif;
             margin: 0;
@@ -26,9 +32,17 @@
             align-items: center;
         }
 
+        /* Adding an overlay to ensure the background doesn't distract from the text */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6); /* Adjust this 0.6 to make background darker/lighter */
+            z-index: -1;
+        }
+
         h1, h2 { font-family: 'Michroma', sans-serif; text-transform: uppercase; letter-spacing: 2px; }
 
-        /* The Bento Grid Layout */
         .bento-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -46,6 +60,7 @@
             position: relative;
             transition: transform 0.3s ease, border-color 0.3s ease;
             overflow: hidden;
+            backdrop-filter: blur(5px); /* Blurs the circuitry behind the cards for readability */
         }
 
         .card:hover {
@@ -54,24 +69,18 @@
             box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
         }
 
-        /* Hero Tile: The Stream */
         .hero { grid-column: span 3; grid-row: span 2; display: flex; flex-direction: column; }
         .video-container { position: relative; padding-bottom: 56.25%; height: 0; margin-top: 10px; border-radius: 8px; overflow: hidden; background: #000; }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
 
-        /* Sidebar Tiles */
         .sidebar { grid-column: span 1; grid-row: span 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
-        .sidebar i { font-size: 2rem; color: var(--accent-blue); margin-bottom: 10px; }
-
-        /* Status Bar Tile */
         .status { grid-column: span 1; grid-row: span 1; border-left: 4px solid var(--accent-green); }
-
-        /* Bottom Feature Tiles */
         .feature { grid-column: span 2; }
 
         a { color: var(--accent-blue); text-decoration: none; font-weight: bold; }
         .tag { font-size: 0.7rem; background: #333; padding: 3px 8px; border-radius: 4px; color: var(--accent-blue); position: absolute; top: 15px; right: 15px; }
 
+        /* Responsive Tweaks */
         @media (max-width: 900px) {
             .bento-grid { grid-template-columns: repeat(2, 1fr); }
             .hero { grid-column: span 2; }
@@ -85,10 +94,10 @@
 </head>
 <body>
 
-    <header style="text-align: center; margin-bottom: 40px;">
-        <img src="TMS_Web_Bannert.png" alt="TMSTORM Logo" style="width: 120px; filter: drop-shadow(0 0 10px var(--accent-blue));">
-        <h1>TMSTORM</h1>
-        <p style="opacity: 0.6;">Whenever the storm rolls in.</p>
+    <header style="text-align: center; margin-bottom: 40px; width: 100%; max-width: 1200px;">
+        <img src="TMS_Web_Bannert.png" alt="TMSTORM Banner" style="width: 100%; max-width: 600px; height: auto; filter: drop-shadow(0 0 15px rgba(0, 212, 255, 0.4));">
+        <h1 style="font-size: 1rem; opacity: 0.8; margin-top: 10px;">The Workshop</h1>
+        <p style="opacity: 0.6; font-style: italic;">Whenever the storm rolls in.</p>
     </header>
 
     <main class="bento-grid">
