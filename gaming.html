@@ -77,7 +77,7 @@
             color: var(--accent-red);
             left: 2px;
             text-shadow: -2px 0 var(--accent-red);
-            clip: rect(0px, 1100px, 115px, 0); /* Masks off part of the text */
+            clip-path: inset(0 0 50% 0); /* Masks off bottom half */
             animation: glitch 1.5s infinite linear alternate-reverse, displacement 3s infinite;
         }
 
@@ -85,7 +85,7 @@
             color: var(--accent-blue);
             left: -2px;
             text-shadow: 2px 0 var(--accent-blue);
-            clip: rect(100px, 1100px, 220px, 0);
+            clip-path: inset(40% 0 0 0); /* Masks off top portion */
             animation: glitch 1s infinite linear alternate-reverse, displacement 2s infinite alternate;
         }
 

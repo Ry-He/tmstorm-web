@@ -221,7 +221,7 @@
 
                 // Step 2: Build updated content
                 const newContent = JSON.stringify({ project, forecast }, null, 2);
-                const encoded = btoa(unescape(encodeURIComponent(newContent)));
+                const encoded = btoa(Array.from(new TextEncoder().encode(newContent), b => String.fromCharCode(b)).join(''));
 
                 // Step 3: Commit the update
                 setMsg('TRANSMITTING...', 'working');
